@@ -1,0 +1,72 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ConfirmEmployeeAppealsModel
+@{
+    ViewData["Title"] = "Patvirtinti prašymus";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+@{
+    if (Model.EmployeeAppealSalons.Count == 0)
+    {
+        <div class="bs-callout bs-callout-info">
+            <text>Šiuo metu jokių prašymų nėra pateikta.</text>
+        </div>
+    }
+    else
+    {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].Salon.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].Salon.City)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].Employee.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayName("Vartotojo prisijungimas")
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].CreatedDate)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.EmployeeAppealSalons)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Salon.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Salon.City.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            <form asp-page="./ConfirmEmployeeAppeals" method="post">
+                                <button class="btn btn-sm btn-success" asp-page-handler="confirm" asp-route-id="@item.Id">Patvirtinti</button>
+                                <button class="btn btn-sm btn-danger" asp-page-handler="cancel" asp-route-id="@item.Id">Atmesti</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+}

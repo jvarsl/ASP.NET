@@ -1,0 +1,168 @@
+﻿@page
+@model SalonWithRazor.IndexModel
+
+@{
+    ViewData["Title"] = "Rezervacijos";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-page="Create">Sukurti rezervaciją</a>
+</p>
+
+<table id="myTable" class="table">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].End)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].ServiceReservation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Employee.Salon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+        @foreach (var item in Model.Reservation)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.End)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @{var services = String.Join(", ", item.ServiceReservation.Select(p => p.Service.Name).ToArray());
+                        @services
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Salon.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.FullName)
+                </td>
+                @{ string colorValue = "";
+                    switch (item.Status.Id)
+                    {
+                        @*
+                            1	Laukiama patvirtinimo
+                            2	Patvirtinta
+                            3	Įvykdyta
+                            4	Atšaukta
+                            5 neatvyko
+                        *@
+                        case 1:
+                            colorValue = "bg-warning text-dark";
+                            break;
+                        case 2:
+                            colorValue = "bg-success text-white";
+                            break;
+                        case 3:
+                            colorValue = "bg-light text-dark";
+                            break;
+                        case 4:
+                            colorValue = "bg-danger text-white";
+                            break;
+                        case 5:
+                            colorValue = "bg-danger text-white";
+                            break;
+                        default:
+                            colorValue = "bg-light text-dark";
+                            break;
+
+                    }
+                }
+                <td class="tdBorderCircled @colorValue">
+                    @Html.DisplayFor(modelItem => item.Status.Description)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">Detaliai</a> |
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Atšaukti</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+<style>
+    .tdBorderCircled {
+        background-clip: padding-box; /* this has been added */
+        border-radius: 5px;
+    }
+</style>
+
+@section Scripts {
+
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () { // employee name
+            $("#myInput").on("keyup", function () {
+                document.getElementById("myList").value = "";
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[4];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script language="javascript" type="text/javascript">
+        function filterByReservationStatus() { // reservation status
+            document.getElementById("myInput").value = "";
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("myList");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[5];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+    </script>
+    <script>
+        $(function () {
+            $("#myTable").tablesorter();
+        });
+    </script>
+}

@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Kirpyklų laiko rezervavimas</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+    <link href="~/lib/bootstrap/dist/css/glyphicons.css" rel="stylesheet" />
+    <link href="~/css/custom.css" rel="stylesheet" />
+    <link href="~/lib/tablesorter-master/css/theme.default.css" rel="stylesheet" />
+    <link href="~/lib/tablesorter-master/css/theme.bootstrap_4.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow" style="background-color: #ccdeeb;">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="~/logo_transparent_dark.png" width="118" height="35" class="d-inline-block align-top">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Namai</a>
+                        </li>
+                        @if (User.IsInRole("Client"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MakeReservation/Index">Atlikti rezervacijas</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CheckReservation/Index">
+                                    Peržiūrėti rezervacijas
+                                    @{await Html.RenderPartialAsync("_ReservationCountPartial"); }
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item dropdown">
+
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Ieškoti
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-page="/SearchPage/SearchServices">Paslaugos</a>
+                                <a class="dropdown-item" asp-area="" asp-page="/SearchPage/SearchSalons">Salono</a>
+                                <a class="dropdown-item" asp-area="" asp-page="/SearchPage/SearchEmployeesList">Darbuotojo - paprastas</a>
+                                <a class="dropdown-item" asp-area="" asp-page="/SearchPage/SearchServicesList">Paslaugos - paprastas</a>
+                            </div>
+                        </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Management/Index">
+                                    Administravimas
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <noscript>
+
+            <div class="alert alert-danger" role="alert">
+                Rezervacijos registravimo puslapiui reikalingas „JavaScript“. Šis pranešimas bus matomas tik tada, jei „JavaScript“ yra išjungtas.
+            </div>
+            <hr />
+        </noscript>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted" style="background-color: #a5d2f2;">
+        <div class="container">
+            &copy; 2020 - SalonWithRazor - <a class="text-dark" asp-area="" asp-page="/Privacy">Privatumas</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/bootstrap-datepicker/dist/locales/bootstrap-datepicker.lt.min.js" charset="UTF-8"></script>
+    <script src="~/bootstrap-datepicker/addition/custom-settings.js"></script>
+    <script src="~/lib/tablesorter-master/js/jquery.tablesorter.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>

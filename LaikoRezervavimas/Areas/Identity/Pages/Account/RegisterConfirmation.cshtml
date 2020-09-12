@@ -1,0 +1,22 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Registracijos patvirtinimas";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+    <p>
+        Šiuo metu šioje programoje nėra registruotas tikras el. Pašto siuntėjas. Norėdami sukonfigūruoti tikrąjį el. Pašto siuntėją, žr. <a href="https://aka.ms/aspaccountconf"> šiuos dokumentus </a>.
+        Paprastai tai būtų siunčiama el. Paštu: <a id="confirm-link" href="@Model.EmailConfirmationUrl"> Spustelėkite čia, kad patvirtintumėte savo sąskaitą </a>
+    </p>
+    }
+    else
+    {
+<p>
+    Patikrinkite savo el. Pašto adresą, kad patvirtintumėte savo paskyrą.
+</p>
+    }
+}

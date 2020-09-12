@@ -1,0 +1,64 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AddServicesDetailsModel
+
+@{
+    ViewData["Title"] = "Detaliau";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Paslauga</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Service.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Service.EstimatedTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service.EstimatedTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Service.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Service.Gender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service.Gender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Service.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service.Price)
+        </dd>
+        @if (Model.Service.ServiceJobTitle != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayName("Paslaugą atlieka")
+            </dt>
+            <dd class="col-sm-10">
+                @String.Join(", ", Model.Service.ServiceJobTitle.Select(r => r.JobTitle.Name).ToArray())
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Service.ServiceCategory.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Service.ServiceCategory.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./AddServicesEdit" asp-route-id="@Model.Service.Id">Redaguoti</a> |
+    <a asp-page="./AddServices">Grįžti</a>
+</div>

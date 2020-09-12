@@ -1,0 +1,103 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AddSalonsModel
+@{
+    ViewData["Title"] = "Tvarkyti salonus";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a class="btn btn-outline-primary" data-toggle="collapse" href="#collapseCreateSalon" role="button" aria-expanded="false" aria-controls="collapseCreateSalon">
+        Salono pridėjimo trumpa forma
+    </a>
+</p>
+<div class="collapse" id="collapseCreateSalon">
+    <small class="text-muted">Norint toliau pridėti papildomą informaciją, redaguok pasirinkęs iš sąrašo žemiau.</small>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Salon.Company" class="control-label"></label>
+                    <select asp-for="Salon.CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Salon.City" class="control-label"></label>
+                    <select asp-for="Salon.CityId" class="form-control" asp-items="ViewBag.CityId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Salon.Address" class="control-label"></label>
+                    <input asp-for="Salon.Address" class="form-control" />
+                    <span asp-validation-for="Salon.Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Salon.Name" class="control-label"></label>
+                    <input asp-for="Salon.Name" class="form-control" />
+                    <span asp-validation-for="Salon.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Sukurti" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <h4>Sąrašas</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salons[0].Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salons[0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salons[0].Latitude)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salons[0].Longitude)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salons[0].Company)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Salons[0].City)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Salons)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Latitude)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Longitude)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City.Name)
+                    </td>
+                    <td>
+                        <a asp-page="./AddSalonsEdit" asp-route-id="@item.Id">Redaguoti</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

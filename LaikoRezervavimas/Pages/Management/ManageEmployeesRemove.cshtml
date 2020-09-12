@@ -1,0 +1,18 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ManageEmployeesRemoveModel
+
+@{
+    ViewData["Title"] = "Pašalinti";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr/>
+<h3>Tikrai pašalinti <b>@Model.Employee.FullName</b> iš <i>@Model.Employee.Salon.FullName</i>?</h3>
+
+<div>
+    <form method="post">
+        <input type="hidden" asp-for="Employee.Id" />
+        <input type="submit" value="Pašalinti" class="btn btn-danger" /> |
+        <a asp-page="./ManageEmployees">Grįžti</a>
+    </form>
+</div>

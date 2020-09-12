@@ -1,0 +1,80 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registruotis";
+}
+<h1>@ViewData["Title"]</h1>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h4>Sukurti naują paskyrą @ViewData["UserType"].</h4>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="UserRoleChoose" />
+
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            @{
+                if (Model.UserRoleChoose == (RegisterModel.UserRoleEnum)1)
+                {
+                    <div class="form-group">
+                        <label asp-for="Input.UserGender"></label>
+                        <select asp-for="Input.UserGender" asp-items="Html.GetEnumSelectList<SalonWithRazor.Models.UserGender>()" class="form-control">
+                            <option selected value="2">Visi</option>
+                        </select>
+                        <span asp-validation-for="Input.UserGender" class="text-danger"></span>
+                        <small class="text-muted">Lytis naudojama tikslesniom paslaugom rodyti, jeigu nurodyti nenorit - palikit pradinį pasirinkimą.</small>
+                    </div>
+                    }
+                }
+            @*
+        <div class="form-group">
+            <label asp-for="Input.UserRoleChoose"></label>
+            <select asp-for="Input.UserRoleChoose" asp-items="Html.GetEnumSelectList<RegisterModel.UserRoleEnum>()" class="form-control">
+            </select>
+            <span asp-validation-for="Input.UserRoleChoose" class="text-danger"></span>
+        </div>
+            *@
+
+            <button type="submit" class="btn btn-primary">Registruotis</button>
+        </form>
+    </div>
+
+    <div class="col-md-4 col-md-offset-2">
+        <section>
+            <hr />
+
+
+
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

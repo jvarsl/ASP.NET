@@ -1,0 +1,72 @@
+﻿@page
+@model SalonWithRazor.Areas.Identity.Pages.Account.Manage.EmployeeAppealToSalonModel
+@{
+    ViewData["Title"] = "Pasirinkti darbinį saloną";
+    ViewData["ActivePage"] = ManageNavPages.EmployeeAppealToSalon;
+}
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+@{ if (Model.user.SalonId == null)
+    {
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <select asp-items="ViewBag.Salons" asp-for="EmployeeAppealSalon.SalonId" class="form-control custom-select" placeholder="Pasirinkite miestą..." data-val="false">
+                    <option value="">Rinktis</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Pridėti" class="btn btn-primary" asp-page-handler="insert" />
+            </div>
+        </form>
+
+        <hr>
+
+        <h5>Laukiama patvirtinimo iš:</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].CreatedDate)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].Salon.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmployeeAppealSalons[0].Salon.City.Name)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.EmployeeAppealSalons)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Salon.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Salon.City.Name)
+                        </td>
+                        <td>
+                            <a asp-page="/SalonPage/Index" asp-route-id="@item.SalonId">Salono puslapis</a> |
+                            <form method="post" style="display: inline;"><button type="submit" class="btn btn-sm btn-danger" asp-page-handler="delete" asp-route-id="@item.Id">Ištrinti prašymą</button></form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <p>Jūs jau esate pridėtas prie <b>@ViewData["Salon"]</b>.</p>
+            </div>
+    }
+}

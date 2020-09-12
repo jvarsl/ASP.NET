@@ -1,0 +1,31 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AssignStaffEmployeesEditModel
+@{
+    ViewData["Title"] = "Pridėti prie personalo rolės";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<form method="post">
+    <h3>Vartotojas @Model.UserRole.UserName</h3>
+    <br>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input class="form-control" type="hidden" asp-for="@Model.UserRole.RoleId" />
+    <input class="form-control" type="hidden" asp-for="@Model.UserRole.RoleName" />
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" asp-for="@Model.UserRole.IsSelected">
+        <label class="custom-control-label" asp-for="@Model.UserRole.IsSelected">
+            @{
+                var labelText = Model.UserRole.RoleName == "Staff" ? "Personalas" : "Model.UserRole.RoleName";
+            }
+            @labelText
+        </label>
+    </div>
+    <br>
+    <div class="form-group">
+        <input type="submit" value="Atnaujinti" class="btn btn-primary" />
+        <a asp-page="./AssignStaffEmployees" class="btn btn-danger">Grįžti</a>
+    </div>
+
+</form>

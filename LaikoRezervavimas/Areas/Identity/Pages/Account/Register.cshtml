@@ -1,0 +1,47 @@
+﻿@page
+@model RegisterFrontPageModel
+@{
+    ViewData["Title"] = "Registracija";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container" style="height: 50px;">
+    </div>
+<div class="container">
+    <div class="row text-center">
+        <div class="col-8">
+            <div class="card box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Klientui</h4>
+                </div>
+                <div class="card-body">
+                    <small class="text-white">.</small>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Registruokis į salonus</li>
+                        <li>Peržiūrėk salonus</li>
+                        <li>Bendrauk su paslaugas teikiančiu asmeniu</li>
+                    </ul>
+                    <a class="btn btn-lg btn-block btn-primary" asp-page="./RegisterUser" asp-route-isClient="true">Registruokis</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Darbuotojui</h4>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">Pradėk veiklą patvirtinus įmonės personalo darbuotojams</small>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="text-white">.</li>
+                        <li class="text-white">.</li>
+                        <li class="text-white">.</li>
+                    </ul>
+                    <a class="btn btn-lg btn-block btn-outline-primary" asp-page="./RegisterUser" asp-route-isEmployee="true">Registruotis darbuotojui</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

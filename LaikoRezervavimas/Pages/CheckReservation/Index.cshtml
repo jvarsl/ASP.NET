@@ -1,0 +1,232 @@
+﻿@page
+@model SalonWithRazor.IndexModelForEmployee
+@using Humanizer
+@{
+    var unverifiedReservationCount = @Model.Reservation.Where(r => r.Status.Id == 1).Count();
+    ViewData["Title"] = unverifiedReservationCount == 0 ? "Rezervacijos" : $"({unverifiedReservationCount}) Rezervacijos";
+}
+
+<h1>Rezervacijos</h1>
+<div style="padding-bottom: 5px;">
+    <div class="form-group form-inline row bs-callout bs-callout-info" style="margin-bottom: 1px; height: 80%; line-height: 75%;">
+        <b>Ieškoti pagal:&nbsp;</b>
+        <label for="inputsm" class="col-form-label-sm align-text-bottom">Kliento vardą&nbsp;</label>
+        <div class="col-xs-4">
+            <input class="form-control form-control-sm" id="myInput" type="text" placeholder="Vardo fragmentas...">
+        </div>
+        <b>&nbsp;arba&nbsp;</b>
+        <label class="col-form-label-sm">Rezervacijos būseną&nbsp;</label>
+        <div class="col-xs-4">
+            <select id="myList" onchange="filterByReservationStatus()" class="form-control custom-select custom-select-sm" asp-items="ViewBag.ReservationStatuses">
+                <option value="">Visus</option>
+            </select>
+        </div>
+        <b>&nbsp;arba&nbsp;</b>
+        <label class="col-form-label-sm">Rezervacijos vykdymo dieną&nbsp;</label>
+        <div class="col-xs-4">
+            <input id="myReservationDay" onchange="filterByReservationDay()" class="form-control custom-select custom-select-sm" data-provide="datepicker" />
+        </div>
+    </div>
+</div>
+
+<table id="myTable" class="table">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                @Html.DisplayName("Iki pradžios")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].End)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].ServiceReservation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation[0].Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+        @foreach (var item in Model.Reservation)
+        {
+            <tr>
+                <td>
+                    @if (item.Start > DateTime.Now)
+                    {
+                        @item.Start.Humanize();
+                    }
+                    else
+                    {
+                        @Html.DisplayName("Pasibaigė");
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.End)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @{var services = String.Join(", ", item.ServiceReservation.Select(p => p.Service.Name).ToArray());
+                        @services
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.FullName)
+                </td>
+                @{ string colorValue = "";
+                    switch (item.Status.Id)
+                    {
+                        @*
+                            1	Laukiama patvirtinimo
+                            2	Patvirtinta
+                            3	Įvykdyta
+                            4	Atšaukta
+                            5 neatvyko
+                        *@
+                        case 1:
+                            colorValue = "bg-warning text-dark";
+                            break;
+                        case 2:
+                            colorValue = "bg-success text-white";
+                            break;
+                        case 3:
+                            colorValue = "bg-light text-dark";
+                            break;
+                        case 4:
+                            colorValue = "bg-danger text-white";
+                            break;
+                        case 5:
+                            colorValue = "bg-danger text-white";
+                            break;
+                        default:
+                            colorValue = "bg-light text-dark";
+                            break;
+
+                    }
+                }
+                <td class="tdBorderCircled @colorValue">
+                    @Html.DisplayFor(modelItem => item.Status.Description)
+                </td>
+                <td>
+                    @{
+                        var commentCount = item.ReservationComment.Count();
+                        var detailText = commentCount == 0 ? "Detaliau" : $"Detaliau ({commentCount})";
+                    }
+                    <a asp-page="./Details" asp-route-id="@item.Id" style="white-space: pre; max-width: 90px; width:90px; display: inline-block;">@detailText.PadRight(14)</a> |
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Keisti būseną</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .tdBorderCircled {
+        background-clip: padding-box; /* this has been added */
+        border-radius: 5px;
+    }
+</style>
+
+
+@section Scripts {
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () { // client name
+            $("#myInput").on("keyup", function () {
+                document.getElementById("myList").value = "";
+                document.getElementById("myReservationDay").value = "";
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[5];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script language="javascript" type="text/javascript">
+        function filterByReservationStatus() { // reservation status
+            document.getElementById("myInput").value = "";
+            document.getElementById("myReservationDay").value = "";
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("myList");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[6];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+    </script>
+    <script language="javascript" type="text/javascript">
+        function filterByReservationDay() { // reservation day
+            document.getElementById("myList").value = "";
+            document.getElementById("myInput").value = "";
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("myReservationDay");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        };
+    </script>
+    <script>
+        $(function () {
+            $("#myTable").tablesorter();
+        });
+    </script>
+    <script type="text/javascript" language="JavaScript">
+        (function (seconds) {
+            var refresh,
+                intvrefresh = function () {
+                    clearInterval(refresh);
+                    refresh = setTimeout(function () {
+                        location.href = location.href;
+                    }, seconds * 1000);
+                };
+
+            $(document).on('keypress click', function () { intvrefresh() });
+            intvrefresh();
+
+        }(60));
+    </script>
+}

@@ -1,0 +1,65 @@
+﻿@page
+@model SalonWithRazor.Areas.Identity.Pages.Account.Manage.ChangePictureModel
+@{
+    ViewData["Title"] = "Pakeisti nuotrauką";
+    ViewData["ActivePage"] = ManageNavPages.ChangePicture;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-4">
+        <label class="control-label">Dabartinė nuotrauka</label>
+        <p></p>
+        @{ if (Model.EmployeePicture != null)
+            {
+                if (Model.EmployeePicture.Picture != null)
+                {
+                    var image = Convert.ToBase64String(Model.EmployeePicture.Picture);
+                    <img style="height:100px; width:100px;" src="data:image/png;base64,@Html.DisplayFor(modelItem => image)">
+                }
+            }
+        }
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-4">
+        <h5>Įkelti nuotrauką</h5>
+        <p></p>
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group custom-file">
+                <label asp-for="UploadPicture" class="control-label custom-file-label custom-file-upload">Įkelti</label>
+                <input type="file" id="file-upload" asp-for="UploadPicture" class="form-control custom-file-input" />
+                <span asp-validation-for="UploadPicture" class="text-danger"></span>
+                <h6 class="xsmall"><small>Nuotraukos turi būti simetriškai kvadratinės, sistemoje jos saugomos (200 X 200 px)</small></h6>
+            </div>
+            <p></p>
+            <input type="submit" value="Pridėti" class="btn btn-primary" asp-page-handler="insert" />
+            <input type="submit" value="Ištrinti" class="btn btn-danger" asp-page-handler="delete" />
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#file-upload').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#file-upload')[0].files[0].name;
+            $(this).prev('label').text(file);
+        });
+    </script>
+    <style>
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+    </style>
+}

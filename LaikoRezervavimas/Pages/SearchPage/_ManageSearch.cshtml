@@ -1,0 +1,11 @@
+﻿@using SalonWithRazor.Models
+@{
+}
+
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item"><a class="nav-link @ManageSearchPages.SearchServicesNavClass(ViewContext)" id="services" asp-page="./SearchServices">Paslaugos</a></li>
+        <li class="nav-item"><a class="nav-link @ManageSearchPages.SearchSalonsNavClass(ViewContext)" id="salons" asp-page="./SearchSalons">Salonai</a></li>
+        <li class="nav-item"><a class="nav-link @ManageSearchPages.SearchEmployeesListNavClass(ViewContext)" id="employeesList" asp-page="./SearchEmployeesList">Darbuotojai - paprastas</a></li>
+        <li class="nav-item"><a class="nav-link @ManageSearchPages.SearchServicesListNavClass(ViewContext)" id="servicesList" asp-page="./SearchServicesList">Paslaugos - paprastas</a></li>
+    </ul>
+

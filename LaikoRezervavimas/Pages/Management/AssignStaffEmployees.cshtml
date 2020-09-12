@@ -1,0 +1,113 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AssignStaffEmployeesModel
+@{
+    ViewData["Title"] = "Priskirti prie personalo rolės";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+    <form asp-page="./AssignStaffEmployees" method="get">
+        <div class="form-group row">
+            <div class="col-xs-2" style="padding-right:5px;">
+                <span class="d-inline-block align-middle">Ieškok pagal vardą arba ID:</span>
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+                <input class="form-control" type="text" name="SearchString" value="@Model.CurrentFilter" autocomplete="off" />
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                </button>
+            </div>
+            <div class="col-xs-2" style="padding-right: 5px">
+                <a class="btn btn-outline-secondary" asp-page="./AssignStaffEmployees"><i class="glyphicon glyphicon-remove"></i> Išvalyti</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser[0].FullName)
+            </th>
+            <th>
+                @Html.DisplayName("Prisijungimo vardas")
+            </th>
+            <th>
+                @Html.DisplayName("Sukurtas")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser[0].Blocked)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AppUser)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Blocked)
+            </td>
+            <td>
+                <a asp-page="./AssignStaffEmployeesEdit" asp-route-id="@item.Id">Priskirti roles</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.AppUser.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.AppUser.HasNextPage ? "disabled" : "";
+}
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-page="./AssignStaffEmployees"
+               asp-route-pageIndex="@(Model.AppUser.PageIndex - 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Praeitas
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-page="./AssignStaffEmployees"
+               asp-route-pageIndex="@(Model.AppUser.PageIndex + 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Kitas
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+<a href='javascript:history.go(-1)'>Grįžti atgal</a>
+
+@section scripts
+{
+    <script type="text/javascript">
+    </script>
+}

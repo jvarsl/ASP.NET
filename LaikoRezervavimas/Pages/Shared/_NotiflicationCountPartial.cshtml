@@ -1,0 +1,22 @@
+﻿@using SalonWithRazor.Models;
+@using SalonWithRazor.Data;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore;
+@inject UserManager<AppUser> UserManager
+@inject ApplicationDbContext _context
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var UnreadNotiflicationCount = await _context.Notifications
+                .Where(r => r.AppUserId == user.Id && !r.IsRead)
+                .CountAsync();
+}
+
+
+@{ if (@UnreadNotiflicationCount != 0)
+    {
+        <div class="icon-badge">
+            @UnreadNotiflicationCount
+        </div>
+    }
+}
+

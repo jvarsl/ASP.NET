@@ -1,0 +1,30 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.IndexModel
+@{
+    ViewData["Title"] = "Pagrindinis";
+}
+
+<h1>@ViewData["Title"] </h1>
+
+<div class="bs-callout bs-callout-info">
+    <p>
+        Naudokite šoninį atliekamų funkcijų meniu navigacijai.
+        <p>
+    </div>
+<br>
+<text>
+    @Model.AppUser.FullName, Jūs priklausote šioms grupėms:
+    <i>@String.Join(", ", Model.AppUser.AppUserRole.Select(p => p.Role.LithuanianName).ToArray())</i>
+</text>
+<br>
+<br>
+@if (User.IsInRole("Staff"))
+{
+    <h3>Prižiūrimi salonai</h3>
+    foreach (var salon in Model.Salons)
+    {
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action">@Html.DisplayFor(modelItem => salon.FullName), Miestas: @Html.DisplayFor(modelItem => salon.City.Name)</a>
+        </div>
+    }
+}

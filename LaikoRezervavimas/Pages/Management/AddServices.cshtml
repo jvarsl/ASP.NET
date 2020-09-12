@@ -1,0 +1,144 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AddServicesModel
+@{
+    ViewData["Title"] = "Tvarkyti paslaugas";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<p>
+    <a asp-page="AddServicesCreate">Sukurti naują</a>
+</p>
+
+<div class="container">
+    <form asp-page="./AddServices" method="get">
+        <div class="form-group row">
+            <div class="col-xs-4" style="padding-right:5px;">
+                <span class="d-inline-block align-middle">Ieškok pagal salono ar paslaugos pavadinimą</span>
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+                <input class="form-control" type="text" name="SearchString" value="@Model.CurrentFilter" autocomplete="off" />
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                </button>
+            </div>
+            <div class="col-xs-2" style="padding-right: 5px">
+                <a class="btn btn-outline-secondary" asp-page="./AddServices"><i class="glyphicon glyphicon-remove"></i> Išvalyti</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Salonas")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].EstimatedTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service[0].ServiceCategory.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Service)
+        {
+            <tr>
+                <td>
+                    @{
+                        if (item.Salon != null)
+                        {
+                            var substringDescription = item.Salon.FullName.Length < 40 ? item.Salon.FullName : item.Salon.FullName.Substring(0, 37) + "...";
+                            @Html.DisplayFor(modelItem => @substringDescription)
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstimatedTimeHumanized)
+                </td>
+                <td>
+                    @{
+                        if (item.Description != null)
+                        {
+                            var substringDescription = item.Description.Length < 40 ? item.Description : item.Description.Substring(0, 37) + "...";
+                            @Html.DisplayFor(modelItem => @substringDescription)
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ServiceCategory.Name)
+                </td>
+                <td>
+                    <a asp-page="./AddServicesEdit" asp-route-id="@item.Id">Redaguoti</a> |
+                    <a asp-page="./AddServicesDetails" asp-route-id="@item.Id">Detaliau</a> |
+                    <a asp-page="./AddServicesMarkInactive" asp-route-id="@item.Id">Trinti</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@{
+    var prevDisabled = !Model.Service.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Service.HasNextPage ? "disabled" : "";
+}
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-page="./AddServices"
+               asp-route-pageIndex="@(Model.Service.PageIndex - 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Praeitas
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-page="./AddServices"
+               asp-route-pageIndex="@(Model.Service.PageIndex + 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Kitas
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+<a href='javascript:history.go(-1)'>Grįžti atgal</a>
+
+@section scripts
+{
+    <script type="text/javascript">
+    </script>
+}

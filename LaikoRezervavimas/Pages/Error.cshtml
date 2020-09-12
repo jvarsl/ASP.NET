@@ -1,0 +1,29 @@
+﻿
+@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Klaida.</h1>
+<h2 class="text-danger">Apdorojant jūsų užklausą įvyko klaida.</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Užklausos ID: </strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+@if (Model.ShowReferrer)
+{
+<strong>Refereris: </strong> <code>@Model.Referrer</code> 
+}
+
+@if (@Model.ShowExceptionMessage)
+{
+<strong>Klaidos pranešimas: </strong> <code>@Model.ExceptionMessage</code>
+}
+<p/>
+<a href='javascript:history.go(-1)'>Grįžti atgal</a>
+

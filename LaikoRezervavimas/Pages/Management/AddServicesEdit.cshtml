@@ -1,0 +1,81 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AddServicesEditModel
+
+@{
+    ViewData["Title"] = "Redaguoti";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Paslauga</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Service.Id" />
+            <input type="hidden" asp-for="Service.SalonId" />
+            <div class="form-group">
+                <label asp-for="Service.Name" class="control-label"></label>
+                <input asp-for="Service.Name" class="form-control" />
+                <span asp-validation-for="Service.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Service.EstimatedTime" class="control-label">Trukmė (minutėmis)</label>
+                <select asp-for="Service.EstimatedTime" class="form-control" asp-items="ViewBag.Times"></select>
+                <span asp-validation-for="Service.EstimatedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Service.Description" class="control-label"></label>
+                <textarea asp-for="Service.Description" class="form-control"></textarea>
+                <span asp-validation-for="Service.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Service.Gender" class="control-label"></label>
+                <select asp-for="Service.Gender" asp-items="Html.GetEnumSelectList<SalonWithRazor.Models.UserGender>()" class="form-control"></select>
+                <span asp-validation-for="Service.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Service.Price" class="control-label"></label>
+                <input asp-for="Service.Price" class="form-control" />
+                <span asp-validation-for="Service.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <input type="hidden" class="form-check-input" asp-for="Service.Active" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Service.ServiceCategoryId" class="control-label"></label>
+                <select asp-for="Service.ServiceCategoryId" class="form-control" asp-items="ViewBag.ServiceCategoryId"></select>
+                <span asp-validation-for="Service.ServiceCategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @{ var i = 0;
+                    <label class="control-label">Paslaugą galės atlikti</label>
+                    foreach (var item in Model.ServiceJobTitles)
+                    {
+                        <input type="hidden" asp-for="@Model.ServiceJobTitles[i].ServiceJobId" />
+                        <input type="hidden" asp-for="@Model.ServiceJobTitles[i].ServiceJobString" />
+                        <div class="custom-control custom-checkbox">
+                            <input asp-for="@Model.ServiceJobTitles[i].IsSelected" type="checkbox" class="custom-control-input">
+                            <label class="custom-control-label" asp-for="@Model.ServiceJobTitles[i].IsSelected">
+                                @Model.ServiceJobTitles[i].ServiceJobString
+                            </label>
+                        </div>
+                        i++;
+                    }
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Išsaugoti" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./AddServices">Grįžti</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

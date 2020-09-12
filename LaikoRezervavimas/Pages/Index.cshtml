@@ -1,0 +1,188 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Namai";
+}
+<link href="~/css/one-page-wonder.min.css" rel="stylesheet" />
+
+<header class="masthead full-width">
+    <div class="masthead-content">
+        <div class="container" style="padding: 20px 20px 20px 20px;">
+            <div class="row">
+                @*
+                    <h1 class="masthead-heading mb-0 text-white">One Page Wonder</h1>
+                    <h2 class="masthead-subheading mb-0 text-white text-center">Will Rock Your Socks Off</h2>
+                *@
+                <div class="col-5" style="padding-left: 30px;">
+                    <div style="max-width: 350px; min-width: 350px; min-height: 280px; max-height: 280px;">
+                        <div class="card ">
+                            <div class="card-header nav-justified" style="padding: .75rem .57rem; padding-top: 0px;">
+                                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="service-tab" data-toggle="tab" href="#service" role="tab" aria-controls="service" aria-selected="true">Paslauga</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="salon-tab" data-toggle="tab" href="#salon" role="tab" aria-controls="salon" aria-selected="false">Salonas</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body" style="padding-bottom: 0px;">
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="service" role="tabpanel" aria-labelledby="service-tab">
+                                        <form asp-page="/SearchPage/SearchServices" method="get">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" style="width: 113px; background-color: white; border-color: white; padding-left: 0px; color: rgb(33, 37, 41);"><text>Kategorija</text></div>
+                                                        <div class="input-group-text"><i class="glyphicon glyphicon-list-alt text-primary"></i></div>
+                                                    </div>
+                                                    <select asp-items="ViewBag.ServiceCategories" name="searchServiceCategory" id="searchServiceCategory" class="form-control custom-select" placeholder="Pasirink..." data-val="false">
+                                                        <option value="">Visi</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" style="width: 113px; background-color: white; border-color: white; padding-left: 0px; color: rgb(33, 37, 41);"><text>Miestas</text></div>
+                                                        <div class="input-group-text"><i class="glyphicon glyphicon-map-marker text-primary"></i></div>
+                                                    </div>
+                                                    <select asp-items="ViewBag.Cities" name="SearchCityInt" id="SearchCityInt" class="form-control custom-select" placeholder="Pasirink..." data-val="false">
+                                                        <option value="">Visi</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" style="width: 113px; background-color: white; border-color: white; padding-left: 0px; color: rgb(33, 37, 41);"><text>Diena</text></div>
+                                                        <div class="input-group-text"><i class="glyphicon glyphicon-calendar text-primary"></i></div>
+                                                    </div>
+                                                    <input id="datepickerDay" name="searchDateDT" pattern="\d{4}-\d{1,2}-\d{1,2}" class="form-control" placeholder="Nesvarbu" data-provide="datepicker" autocomplete="off" />
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-outline-primary m-sm-auto" style="width: 100%;">
+                                                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                                                </button>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="salon" role="tabpanel" aria-labelledby="salon-tab">
+                                        <form asp-page="/SearchPage/SearchSalons" method="get">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" style="width: 113px; background-color: white; border-color: white; padding-left: 0px; color: rgb(33, 37, 41);"><text>Salonas</text></div>
+                                                        <div class="input-group-text"><i class="glyphicon glyphicon-home text-primary"></i></div>
+                                                    </div>
+                                                    <select asp-items="ViewBag.Salons" name="SearchString" id="SearchString" class="form-control custom-select" placeholder="Visi" data-val="false">
+                                                        <option value="">Visi</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" style="width: 113px; background-color: white; border-color: white; padding-left: 0px; color: rgb(33, 37, 41);"><text>Miestas</text></div>
+                                                        <div class="input-group-text"><i class="glyphicon glyphicon-map-marker text-primary"></i></div>
+                                                    </div>
+                                                    <select asp-items="ViewBag.Cities" name="SearchCityInt" id="SearchCityInt" class="form-control custom-select" data-val="false">
+                                                        <option value="">Visi</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-outline-primary m-sm-auto" style="width: 100%;">
+                                                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col d-none d-md-inline-block text-center text-md-right text-sm-right">
+                    <h3 class="masthead-heading mb-0 text-white">Rezervuokis</h3>
+                    <h4 class="masthead-subheading mb-0 text-white">dabar!</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+</header>
+
+@{
+    if (!Model.IsEmailConfirmed)
+    {
+        <br>
+        <div class="bs-callout bs-callout-info text-center">
+            <h4 class="alert-heading">Nepatvirtintas el.paštas!</h4>
+            <p>Patvirtinimo laiškas buvo išsiųstas. Nepatvirtintos paskyros negali atstatyti slaptažodžio ir keisti el. pašto.</p>
+        </div>
+    }
+}
+
+@{
+    if (User.IsInRole("Employee") && !Model.EmployeeSalonId.HasValue)
+    {
+        <br>
+        <div class="alert alert-info text-center" role="alert">
+            <h4 class="alert-heading">Nėra priskirto salono!</h4>
+            <p>Pilnos darbuotojo funkcijos veiks, kai bus pasirinktas salonas ir patvirtintas salono administracijos.</p>
+            <hr>
+            <p class="mb-0">Pasirink saloną nustatymuose (paspaudus ant savo vardo aukčiau dešinėje puseje) -> „Darbo salonas“ skiltyje.</p>
+        </div>
+    }
+}
+
+<br>
+
+<div class="text-center">
+    <h4 class="text-dark">Kirpyklų rezervavimo galimybės</h4>
+    <br>
+    <div class="row justify-content-center">
+
+        <div class="col-xs-6">
+            <div class="text-center" style="width: 18rem;">
+                <img src="~/icons/icons8-schedule-96.png" class="mx-auto d-block" style="width:64px; height:64px">
+                <div class="body">
+                    <h6 class="text-dark">Rezervavimas visą parą</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="text-center" style="width: 18rem;">
+                <img src="~/icons/icons8-search-96.png" class="mx-auto d-block" style="width:64px; height:64px">
+                <div class="body">
+                    <h6 class="text-dark">Paieška iš daugelio salonų</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<br>
+
+<div class="text-center full-width">
+    @*  @{await Html.RenderPartialAsync("_UpcomingThreeReservations"); }  *@
+    @if (Model.Reservation != null)
+    {
+        <partial name="_UpcomingThreeReservations" model="Model.Reservation" />
+    }
+
+</div>

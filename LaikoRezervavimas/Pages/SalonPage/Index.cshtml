@@ -1,0 +1,516 @@
+﻿@page
+@model SalonWithRazor.Pages.SalonPage.IndexModel
+@using SalonWithRazor.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@{
+    ViewData["Title"] = @Model.Salon.Name;
+    var user = await UserManager.GetUserAsync(User);
+}
+<div class="container" id="myMap" style="height:200px; padding-left: 30em;">
+</div>
+<div class="container row">
+    <div class="">
+        <h1>@ViewData["Title"]</h1>
+        <h6><i>@Model.Salon.Address, @Model.Salon.City.Name </i></h6>
+    </div>
+
+    <div class="col list-inline text-right" style="padding-top: 1px;">
+        <a class="btn btn-outline-primary list-inline-item" href="#serviceSection">Paslaugos</a>
+        <a class="btn btn-outline-primary list-inline-item" href="#timeSection">Darbo laikas</a>
+        <a class="btn btn-outline-primary list-inline-item" href="#teamSection">Komanda</a>
+    </div>
+</div>
+
+<hr>
+
+
+
+
+<h1 id="serviceSection">@Html.DisplayNameFor(r => Model.Salon.Service)</h1>
+<div class="container">
+    <form asp-page="./Index" method="get">
+        <div class="form-group row">
+            <div class="col-xs-2" style="padding-right:5px;">
+                <span class="d-inline-block align-middle">Ieškok pagal kategoriją:</span>
+            </div>
+
+            <input type="hidden" asp-for="Id" readonly />
+
+            <div class="col-xs-2" style="padding-right:5px">
+                <select asp-items="ViewBag.ServiceCategories" name="serviceCategoryId" class="form-control custom-select" placeholder="Pasirinkite kategoriją..." data-val="false">
+                    <option value="">Visos</option>
+                </select>
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                </button>
+            </div>
+            <div class="col-xs-2" style="padding-right: 5px">
+                <a class="btn btn-outline-secondary" asp-page="./Index" asp-route-id="@Model.Salon.Id"><i class="glyphicon glyphicon-remove"></i> Išvalyti</a>
+            </div>
+        </div>
+    </form>
+</div>
+<h6 style="color:dimgrey;"><i>išsirink paslaugą, paspaudęs pasirink darbuotoją</i></h6>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+                @{ var iteratorId = 0;
+                    var sortOrder = new Dictionary<int, int>();
+                    /*0 male,1 female, 2 all. male sql order sample below
+                    ORDER BY  CASE
+                    WHEN Gender = 0 THEN 0
+                    WHEN Gender = 1 THEN 2
+                    WHEN Gender = 2 THEN 1
+                    END
+                    it gives priority to selected user gender.
+                    */
+                    if (SignInManager.IsSignedIn(User) && user.Gender == (UserGender)0)
+                    {
+                        sortOrder.Add(0, 0);
+                        sortOrder.Add(1, 2);
+                        sortOrder.Add(2, 1);
+                    }
+                    else if (SignInManager.IsSignedIn(User) && user.Gender == (UserGender)1)
+                    {
+                        sortOrder.Add(0, 2);
+                        sortOrder.Add(1, 0);
+                        sortOrder.Add(2, 1);
+
+                    }
+                    else
+                    {
+                        sortOrder.Add(0, 1);
+                        sortOrder.Add(1, 1);
+                        sortOrder.Add(2, 0);
+                    }
+                    var defaultOrder = sortOrder.Max(r => r.Value) + 1;
+
+                    foreach (var service in Model.Salon.Service.Where(r => r.Active == true).Where(r => (Model.CurrentFilterCategory != 0) ? r.ServiceCategoryId == Model.CurrentFilterCategory : true)
+                        .OrderBy(r => sortOrder.TryGetValue((int)r.Gender, out var order) ? order : defaultOrder))
+                    {
+                        iteratorId++;
+                        var headingId = "heading" + iteratorId.ToString();
+                        var collapseId = "collapse" + iteratorId.ToString();
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="@headingId">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                                        @Html.DisplayFor(r => service.FullName)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="@collapseId" class="panel-collapse collapse" role="tabpanel" aria-labelledby="@headingId">
+
+                                <small style="color: dimgrey; padding-left: 20px;">Trukmė: @Html.DisplayFor(r => service.EstimatedTimeHumanized)</small>
+                                @if (service.Description != null)
+                                {
+                                    <br>
+                                    <small style="color: dimgrey; padding-left: 20px;">Aprašymas: @Html.DisplayFor(r => service.Description) </small>
+                                }
+
+                                <div class="panel-body">
+                                    <table class="table table-bo" style="table-layout: fixed; width: 100%;">
+                                        <tbody>
+                                            @foreach (var serviceJobTitle in service.ServiceJobTitle)
+                                            {
+                                                @foreach (var employee in serviceJobTitle.JobTitle.Employee.Distinct())
+                                                {
+                                                    <tr>
+                                                        <td style="width: 20%;">
+                                                        </td>
+                                                        <td style="text-align:left; width: 40%;">
+                                                            @Html.DisplayFor(r => employee.FullName) <small><i>(@Html.DisplayFor(r => employee.JobTitle.Name))</i></small>
+                                                        </td>
+                                                        <td style="width: 20%;">
+                                                        </td>
+                                                        @if (User.IsInRole("Client"))
+                                                        {
+                                                            <td style="width: 5%; padding-left: 0px;">
+                                                                <span class="btn btn-outline-danger btn-sm" style="cursor: pointer;" title="Įsiminti" onclick="ajaxAddNotification('/MakeReservation/Create?cityId=@Model.Salon.CityId&salonId=@Model.Salon.Id&employeeId=@employee.Id&serviceId1=@service.Id&handler=FromSalonPage',@user.Id,this);"><i class="glyphicon glyphicon-heart-empty"></i></span>
+                                                            </td>
+                                                            <td style="text-align:right; width: 15%;">
+                                                                <a class="btn btn-outline-info btn-sm" asp-page="/MakeReservation/Create" asp-route-cityId="@Model.Salon.CityId" asp-route-salonId="@Model.Salon.Id" asp-route-employeeId="@employee.Id" asp-route-serviceId1="@service.Id" asp-page-handler="FromSalonPage">Rezervuok</a>
+                                                            </td>
+                                                        }
+                                                        else if (User.Identity.Name == null)
+                                                        {
+                                                            <td style="text-align:right; width: 20%;">
+                                                                <a class="btn btn-outline-secondary btn-sm" asp-page="/MakeReservation/Create" asp-route-cityId="@Model.Salon.CityId" asp-route-salonId="@Model.Salon.Id" asp-route-employeeId="@employee.Id" asp-route-serviceId1="@service.Id" asp-page-handler="FromSalonPage">Prisijunkite</a>
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<h1 id="timeSection">„@ViewData["Title"]” darbo laikas</h1>
+<table class="text-center">
+    <tbody>
+        @{
+            var currentDay = (byte)DateTime.Now.DayOfWeek;
+            currentDay = currentDay == (byte)0 ? (byte)7 : currentDay;
+            foreach (var times in Model.Salon.SalonSchedule)
+            {
+                var day = "";
+                var startTime = times.StartTime.ToString().Substring(0, 5);
+                var endTime = times.EndTime.ToString().Substring(0, 5);
+                var color = startTime != endTime ? "#449D44" : "#D9534F";
+                switch (times.Day)
+                {
+                    case 1: day = "Pirmadienis"; break;
+                    case 2: day = "Antradienis"; break;
+                    case 3: day = "Trečiadienis"; break;
+                    case 4: day = "Ketvirtadienis"; break;
+                    case 5: day = "Penktadienis"; break;
+                    case 6: day = "Šeštadienis"; break;
+                    case 7: day = "Sekmadienis"; break;
+                }
+                <tr>
+
+                    <td class="tdBorderCircled dot" style="background-color: @color; color: @color;"></td>
+                    <td style="width: 50%">
+                        @if (currentDay == times.Day)
+                        {
+                            <b>@day</b>
+                        }
+                        else
+                        {
+                            @day
+                        }
+                    </td>
+                    <td style="width: 12.5%">@Html.DisplayFor(r => startTime)</td>
+                    <td style="width: 8.33%">-</td>
+                    <td style="width: 12.5%">@Html.DisplayFor(r => endTime)</td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>
+
+
+@{ if (Model.Salon.Description != null && Model.Salon.Description.Any())
+    {
+        <hr>
+        <br>
+        <h1 id="descriptionSection">Aprašymas</h1>
+        @Html.DisplayFor(r => Model.Salon.Description)
+    }
+}
+<hr>
+<br>
+<h1 id="teamSection">Komanda</h1>
+<div class="row">
+    @{ foreach (var employee in Model.Salon.Employee)
+        {
+            <div class="col-lg-4">
+                <div class="our-team-main">
+
+                    <div class="team-front">
+                        @if (employee.EmployeePicture != null)
+                        {
+                            if (employee.EmployeePicture.PictureWithDefault != null)
+                            {
+                                var image = Convert.ToBase64String(employee.EmployeePicture.PictureWithDefault);
+                                <img class="img-fluid" src="data:image/png;base64,@Html.DisplayFor(modelItem => image)">
+                            }
+                        }
+                        else
+                        {
+                            <img class="img-fluid" src="~/User-default-icon.png" />
+                        }
+                        <h3>@Html.DisplayFor(r => employee.FullName)</h3>
+                        <p>@Html.DisplayFor(r => employee.JobTitle.Name)</p>
+                    </div>
+
+                    <div class="team-back">
+                        <span>
+                            @Html.DisplayFor(r => employee.FirstName) atlieka šias paslaugas: <br>
+                            @{var services = employee.JobTitle != null ? String.Join(", ", employee.JobTitle.ServiceJobTitle.Where(r => r.Service.Active).Select(p => p.Service.Name).Distinct().ToArray()) : "-";
+                                @Html.DisplayFor(r => services)
+                            }
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+    }
+</div>
+
+<a href='javascript:history.go(-1)'>Grįžti atgal</a>
+
+@{
+    var random = new Random();
+    var color1 = String.Format("#{0:X6}", random.Next(0x1000000));
+    var color2 = String.Format("#{0:X6}", random.Next(0x1000000));
+
+
+}
+@section scripts
+{
+    <script src="https://maps.googleapis.com/maps/api/js?&callback=initMap&language=lt&region=LT&sensor=false"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            DisplayGoogleMap();
+        });
+
+        function DisplayGoogleMap() {
+
+            //Set the Latitude and Longitude of the Map
+            var myAddress = new google.maps.LatLng(@Model.Salon.Latitude.ToString().Replace(',','.'), @Model.Salon.Longitude.ToString().Replace(',', '.'));
+            //Create Options or set different Characteristics of Google Map
+            var mapOptions = {
+                center: myAddress,
+                disableDefaultUI: true,
+                zoom: 15,
+                minZoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            //Display the Google map in the div control with the defined Options
+            var map = new google.maps.Map(document.getElementById("myMap"), mapOptions);
+
+            //Set Marker on the Map
+            var marker = new google.maps.Marker({
+                position: myAddress,
+                animation: google.maps.Animation.DROP,
+            });
+
+
+            marker.setMap(map);
+        }
+    </script>
+
+    <script type="text/javascript" language="JavaScript">
+        function ajaxAddNotification(stringLink, intUserId, element) {
+            var currentUser = intUserId;
+            var link = stringLink;
+            $(element).removeClass("btn-outline-danger");
+            $(element).addClass("btn-success");
+            $.ajax({
+                type: "POST",
+                url: "/SalonPage/Index?handler=CreateNotification",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: JSON.stringify({
+                    UserId: currentUser,
+                    Link: link,
+                }),
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+
+                }
+            });
+        }
+
+    </script>
+
+
+}
+
+<style>
+    /* Remove the top border when a table is missing the header */
+.table > tbody > tr:first-child > td {
+    border: none;
+}
+
+/* Include the border when there's a header */
+.table > thead + tbody > tr:first-child > td {
+    border-top: 1px solid #ddd;
+}
+        /*accordion start*/
+    a:hover, a:focus{
+ outline: none;
+ text-decoration: none;
+}
+#accordion .panel{
+ border:0px none;
+ box-shadow:none;
+}
+#accordion .panel-heading{
+ padding:0;
+ background: #fff;
+}
+#accordion .panel-title a{
+ display: block;
+ position: relative;
+ background:transparent;
+ color:#206FB7;
+ font-size:14px;
+ font-weight: bolder;
+ text-transform:uppercase;
+ margin-bottom:15px;
+ padding:15px 20px;
+ border-bottom:1px solid #206FB7;
+ border-radius: 0 5px 0 5px;
+ transition:all 0.10s linear 0s;
+}
+#accordion .panel-title a.collapsed{
+ color:#808080;
+ border-bottom:1px solid #d3d3d3;
+ margin: 0;
+}
+#accordion .panel-title a i{
+ color:#206FB7;
+ position: absolute;
+ top: 14px;
+ left:25px;
+}
+    #accordion .panel-title a:before,
+    #accordion .panel-title a.collapsed:before {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 36px;
+        border: 7px solid transparent;
+        border-top: 7px solid #206FB7;
+    }
+#accordion .panel-title a.collapsed:before{
+ content:"";
+ border: 0px none;
+}
+#accordion .panel-title a.collapsed:hover{
+ color: #6a6060;
+}
+#accordion .panel-title a:after,
+#accordion .panel-title a.collapsed:after{
+ content: "\e113";
+ font-family: 'Glyphicons Halflings';
+ color: #206FB7;
+ font-size: 20px;
+ line-height: 20px;
+ position: absolute;
+ top: 14px;
+ right:25px;
+}
+#accordion .panel-title a.collapsed:after{
+ content: "\e114";
+ color:#808080;
+}
+    #accordion .panel-body {
+        border-top: 0 none;
+        color: #808080;
+    }
+     /*accordion end*/
+
+
+        .tdBorderCircled {
+        background-clip: padding-box; /* this has been added */
+        border-radius: 15px;
+    }
+
+    .dot {
+        height: 25px;
+        width: 25px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+        #myMap {
+    background: @color1;
+    background: linear-gradient(135deg, @color1 0%,@color1 51%, @color2 51%, @color2 100%);
+        }
+
+    a[href^="http://maps.google.com/maps"],
+    a[href^="https://maps.google.com/maps"],
+    a[href^="https://www.google.com/maps"] {
+        display: none !important;
+    }
+.gm-bundled-control .gmnoprint {
+    display: block;
+}
+.gmnoprint:not(.gm-bundled-control) {
+    display: none;
+}
+</style>
+
+<style>
+
+    .our-team-main {
+        width: 100%;
+        height: auto;
+        border-bottom: 5px #206FB7 solid;
+        text-align: center;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        transition: 0.5s;
+        margin-bottom: 28px;
+    }
+
+
+        .our-team-main img {
+            border-radius: 50%;
+            margin-bottom: 20px;
+            width: 90px;
+        }
+
+        .our-team-main h3 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .our-team-main p {
+            margin-bottom: 0;
+        }
+
+    .team-back {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 5px 15px 0 15px;
+        text-align: left;
+    }
+
+    .team-front {
+        width: 100%;
+        height: auto;
+        position: relative;
+        z-index: 10;
+        background: #fff;
+        padding: 15px;
+        bottom: 0px;
+        transition: all 0.5s ease;
+    }
+
+    .our-team-main:hover .team-front {
+        bottom: -200px;
+        transition: all 0.5s ease;
+    }
+
+    .our-team-main:hover {
+        border-color: #597987;
+        transition: 0.5s;
+    }
+
+    /*our-team-main*/
+
+
+</style>

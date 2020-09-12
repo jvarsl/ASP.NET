@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
+    <h1>Administravimas</h1>
+
+<div>
+    <h4>Pasirink skiltį ir valdyk</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-2">
+            <partial name="./Management/_ManageManagement" />
+        </div>
+        <div class="col-md-10">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

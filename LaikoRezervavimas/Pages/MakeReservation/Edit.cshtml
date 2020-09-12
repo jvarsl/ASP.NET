@@ -1,0 +1,56 @@
+﻿@page
+@model SalonWithRazor.EditModel
+
+@{
+    ViewData["Title"] = "Būsena";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Rezervacija</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Reservation.Id" />
+            <input type="hidden" asp-for="Reservation.ClientId" class="form-control">
+
+            <input type="hidden" asp-for="Reservation.EmployeeId" class="form-control">
+
+            <input type="hidden" asp-for="Reservation.Start" class="form-control" />
+
+            <input type="hidden" asp-for="Reservation.End" class="form-control" />
+
+            <input type="hidden" asp-for="Reservation.CreatedDate" class="form-control" />
+
+            <input type="hidden" asp-for="Reservation.ModifiedDate" class="form-control" />
+
+            <input type="hidden" asp-for="Reservation.ModifiedBy" class="form-control" />
+
+            @if (Model.Reservation.Status.Id == 3 || Model.Reservation.Status.Id == 4 || Model.Reservation.Start <= DateTime.Now)
+            {
+                <div class="alert alert-danger">
+                    <p>Rezervacija yra uždaryta arba jau po laiko, tad negalima keisti būsenos.</p>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="Reservation.Status.Id" value="4">
+                <div class="form-group">
+                    <input type="submit" value="Atšaukti" class="btn btn-danger" />
+                    <a asp-page="./Index" class="btn btn-secondary">Grįžti</a>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Grįžti</a> |
+    <a asp-page="./Details" asp-route-id="@Model.Reservation.Id">Detaliau</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

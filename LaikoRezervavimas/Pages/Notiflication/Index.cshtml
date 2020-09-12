@@ -1,0 +1,114 @@
+﻿@page
+@model SalonWithRazor.Pages.Notiflication.IndexModel
+
+@{
+    ViewData["Title"] = "Pranešimai";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+    <form asp-page="./Index" method="get">
+        <div class="form-group row">
+            <div class="col-xs-4" style="padding-right:5px">
+                <select asp-items="ViewBag.Types" name="searchTypeInt" class="form-control custom-select" data-val="false">
+                    <option value="">Visi</option>
+                </select>
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                </button>
+            </div>
+            <div class="col-xs-2" style="padding-right: 5px">
+                <a class="btn btn-outline-secondary" asp-page="./Index"><i class="glyphicon glyphicon-remove"></i> Išvalyti</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelForNotificationIndexes[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelForNotificationIndexes[0].Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelForNotificationIndexes[0].Link)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelForNotificationIndexes[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModelForNotificationIndexes[0].IsRead)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ModelForNotificationIndexes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <a href="@Html.DisplayFor(modelItem => item.Link)">
+                        Peržiūrėti
+                    </a>
+                </td>
+                <td>
+                    @{ var typeReadableText = item.Type switch
+                        {
+                            (SalonWithRazor.Models.NotiflicationType)0 => "Būsenos",
+                            (SalonWithRazor.Models.NotiflicationType)1 => "Komentarai",
+                            (SalonWithRazor.Models.NotiflicationType)2 => "Įsimintini",
+                            _ => "",
+                        };
+                        @Html.DisplayFor(modelItem => typeReadableText)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsRead)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@{
+    var prevDisabled = !Model.Notification.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Notification.HasNextPage ? "disabled" : "";
+}
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-page="./Index"
+               asp-route-pageIndex="@(Model.Notification.PageIndex - 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Praeitas
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-page="./Index"
+               asp-route-pageIndex="@(Model.Notification.PageIndex + 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Kitas
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+<a href='javascript:history.go(-1)'>Grįžti atgal</a>

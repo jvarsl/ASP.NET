@@ -1,0 +1,113 @@
+﻿@using SalonWithRazor.Models;
+@using SalonWithRazor.Data;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore;
+@inject UserManager<AppUser> UserManager
+@model IList<Reservation>
+@{
+}
+<div class="container" style="display:inline-block; margin-bottom: 1px; height: 80%; line-height: 75%; padding:0px 15px;">
+    @{ if (Model.Any())
+        {
+            <h4 class="text-dark">Artimiausios rezervacijos</h4>
+            <br>
+            if (User.IsInRole("Client"))
+            {
+                <table class="table table-sm table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Start)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].ServiceReservation)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Employee.Salon)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Employee)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Status)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Start)
+                                </td>
+                                <td>
+                                    @{var services = String.Join(", ", item.ServiceReservation.Select(p => p.Service.Name).ToArray());
+                                        @services
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Employee.Salon.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Employee.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status.Description)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (User.IsInRole("Employee"))
+            {
+                <table class="table table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Start)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].End)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].ServiceReservation)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Client)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => Model[0].Status)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Start)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.End)
+                                </td>
+                                <td>
+                                    @{var services = String.Join(", ", item.ServiceReservation.Select(p => p.Service.Name).ToArray());
+                                        @services
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Client.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status.Description)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    }
+
+</div>

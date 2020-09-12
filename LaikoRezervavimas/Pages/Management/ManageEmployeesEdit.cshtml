@@ -1,0 +1,156 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ManageEmployeesEditModel
+@{
+    ViewData["Title"] = "Redaguoti";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>@Model.EmployeeVM.FullName</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EmployeeVM.Id" />
+            <input type="hidden" asp-for="EmployeeVM.SalonId" />
+            <input type="hidden" asp-for="EmployeeVM.FullName" class="form-control" />
+            <label class="control-label" asp-for="EmployeeVM.JobTitleId"></label>
+            <select asp-for="EmployeeVM.JobTitleId" asp-items="ViewBag.JobTitleId" class="form-control">
+                @if (!Model.EmployeeVM.JobTitleId.HasValue)
+                {
+                    <option value="">Rinktis</option>
+                }
+            </select>
+            @if (!Model.EmployeeVM.JobTitleId.HasValue)
+            {
+                <small class="text-muted">Be profesijos nebus galima atlikti paslaugas</small>
+            }
+            <span asp-validation-for="EmployeeVM.JobTitleId" class="text-danger"></span>
+            <hr />
+            @{ var i = 0;
+                foreach (var day in Model.EmployeeVM.EmployeeSchedule)
+                {
+                    var startTimeDayId = "startTime" + day.Day.Value.ToString();
+                    var endTimeDayId = "endTime" + day.Day.Value.ToString();
+                    var startTimeBreakDayId = "startTimeBreak" + day.Day.Value.ToString();
+                    var endTimeBreakDayId = "endTimeBreak" + day.Day.Value.ToString();
+                    <input type="hidden" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].Id" />
+                    <input type="hidden" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].EmployeeId" />
+                    <input type="hidden" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].Day" />
+                    <input type="hidden" asp-for="@Model.EmployeeVM.SalonSchedule[i].Day" />
+                    <input type="hidden" asp-for="@Model.EmployeeVM.SalonSchedule[i].StartTime" />
+                    <input type="hidden" asp-for="@Model.EmployeeVM.SalonSchedule[i].EndTime" />
+                    <label class="control-label" style="padding-bottom: 0px;">
+                        <text class="font-weight-bold">@Tools.DayToWord.LithuanianDayWord(day.Day.Value)   </text>
+                        <small class="text-muted">(Salono laikas @Model.EmployeeVM.SalonSchedule[i].StartTime.Value.ToString().Substring(0, 5)-@Model.EmployeeVM.SalonSchedule[i].EndTime.Value.ToString().Substring(0, 5))</small>
+                    </label>
+                    <div class="row" style="padding-bottom: 5px;">
+                        <div class="col-3 my-auto">
+                            <text>Darbo laikas</text>
+                        </div>
+                        <div class="col-3 my-auto form-group">
+                            <div class="input-group" id="@startTimeDayId" data-target-input="nearest">
+                                <input asp-for="@Model.EmployeeVM.EmployeeSchedule[i].StartTime" class="form-control datetimepicker-input" data-target="#@startTimeDayId" autocomplete="off">
+                                <div class="input-group-append" data-target="#@startTimeDayId" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="glyphicon glyphicon-time"></i></div>
+                                </div>
+                                <span asp-validation-for="@Model.EmployeeVM.EmployeeSchedule[i].StartTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-1 my-auto text-center font-weight-bold">
+                            <text>-</text>
+                        </div>
+                        <div class="col-3 my-auto form-group">
+                            <div class="input-group" id="@endTimeDayId" data-target-input="nearest">
+                                <input asp-for="@Model.EmployeeVM.EmployeeSchedule[i].EndTime" class="form-control datetimepicker-input" data-target="#@endTimeDayId" autocomplete="off">
+                                <div class="input-group-append" data-target="#@endTimeDayId" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="glyphicon glyphicon-time"></i></div>
+                                </div>
+                                <span asp-validation-for="@Model.EmployeeVM.EmployeeSchedule[i].EndTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-2 my-auto form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].IsWorking">
+                                <label class="custom-control-label" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].IsWorking"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding: 0px;">
+                        <div class="col-3 my-auto">
+                            <text>Pertrauka</text>
+                        </div>
+                        <div class="col-3 my-auto form-group">
+                            <div class="input-group" id="@startTimeBreakDayId" data-target-input="nearest">
+                                <input asp-for="@Model.EmployeeVM.EmployeeSchedule[i].BreakStartTime" class="form-control datetimepicker-input form-control-sm" data-target="#@startTimeBreakDayId" autocomplete="off">
+                                <div class="input-group-append" data-target="#@startTimeBreakDayId" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="glyphicon glyphicon-time"></i></div>
+                                </div>
+                                <span asp-validation-for="@Model.EmployeeVM.EmployeeSchedule[i].BreakStartTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-1 my-auto text-center font-weight-bold">
+                            <text>-</text>
+                        </div>
+                        <div class="col-3 my-auto form-group">
+                            <div class="input-group" id="@endTimeBreakDayId" data-target-input="nearest">
+                                <input asp-for="@Model.EmployeeVM.EmployeeSchedule[i].BreakEndTime" class="form-control datetimepicker-input form-control-sm" data-target="#@endTimeBreakDayId" autocomplete="off">
+                                <div class="input-group-append" data-target="#@endTimeBreakDayId" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="glyphicon glyphicon-time"></i></div>
+                                </div>
+                                <span asp-validation-for="@Model.EmployeeVM.EmployeeSchedule[i].BreakEndTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-2 my-auto form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].IsTakingBreak">
+                                <label class="custom-control-label" asp-for="@Model.EmployeeVM.EmployeeSchedule[i].IsTakingBreak"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    i++;
+                }
+            }
+            <div class="form-group">
+                <input type="submit" value="Išsaugoti" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./ManageSalons">Grįžti</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+    <script type="text/javascript">
+        $(function () {
+            $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+                icons: {
+                    time: 'glyphicon glyphicon-time',
+                    date: 'glyphicon glyphicon-calendar',
+                    up: 'glyphicon glyphicon-arrow-up',
+                    down: 'glyphicon glyphicon-arrow-down',
+                    previous: 'fglyphicon glyphicon-chevron-left',
+                    next: 'glyphicon glyphicon-chevron-right',
+                    today: 'glyphicon glyphicon-calendar-check-o',
+                    clear: 'glyphicon glyphicon-trash',
+                    close: 'glyphicon glyphicon-times'
+                },
+                format: 'HH:mm',
+                stepping: '15',
+                allowInputToggle: true
+            });
+        });
+    </script>
+}

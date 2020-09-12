@@ -1,0 +1,52 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ManageSalonsModel
+
+@{
+    ViewData["Title"] = "Tvarkyti salonus";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Salon[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salon[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salon[0].Company)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salon[0].City)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Salon)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City.Name)
+            </td>
+            <td>
+                <a asp-page="./ManageSalonsEdit" asp-route-id="@item.Id">Redaguoti</a> |
+                <a asp-page="./ManageSalonsDetails" asp-route-id="@item.Id">Detaliau</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

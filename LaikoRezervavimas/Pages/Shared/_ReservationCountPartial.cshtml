@@ -1,0 +1,22 @@
+﻿@using SalonWithRazor.Models;
+@using SalonWithRazor.Data;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore;
+@inject UserManager<AppUser> UserManager
+@inject ApplicationDbContext _context
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var UnverifiedReservationCount = await _context.Reservations
+                .Include(r => r.Status)
+                .Where(r => r.EmployeeId == user.Id && r.Status.Id == 1)
+                .CountAsync();
+}
+
+
+@{ if (@UnverifiedReservationCount != 0)
+    {
+        <span class="badge badge-info">
+            @UnverifiedReservationCount
+        </span>
+    }
+}

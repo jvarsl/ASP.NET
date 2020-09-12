@@ -1,0 +1,159 @@
+﻿@page
+@model SalonWithRazor.SearchEmployeesListModel
+
+@{
+    ViewData["Title"] = "Peržiūrėti darbuotojus - paprastas";
+}
+
+<h4>@ViewData["Title"]</h4>
+
+@{ if (!Model.Employee.Any())
+    {
+        <div class="alert alert-info">
+            <text>Nerasta jokių paieškos rezultatų.</text>
+        </div>
+    }
+}
+
+<div class="container">
+    <form asp-page="./SearchEmployeesList" method="get">
+        <div class="form-group row">
+            <div class="col-xs-2" style="padding-right:5px;">
+                <span class="d-inline-block align-middle">Ieškok pagal vardą:</span>
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+                <input class="form-control" type="text" name="SearchString" value="@Model.CurrentFilter" autocomplete="off" />
+            </div>
+            <div class="col-xs-2" style="padding-right:5px">
+
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="glyphicon glyphicon-search"></i> Ieškoti
+                </button>
+            </div>
+            <div class="col-xs-2" style="padding-right: 5px">
+                <a class="btn btn-outline-secondary" asp-page="./SearchEmployeesList"><i class="glyphicon glyphicon-remove"></i> Išvalyti</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].JobTitle.Name)
+            </th>
+            <th>
+                @{
+                    var classGlyphiconName = "";
+                    var orderType = "";
+                    if (Model.CurrentSort != null)
+                    {
+                        if (Model.CurrentSort.Equals("name_desc"))
+                        {
+                            orderType = "name";
+                            classGlyphiconName = "glyphicon glyphicon-chevron-up";
+                        }
+                        if (Model.CurrentSort.Equals("City"))
+                        {
+                            orderType = "city";
+                            classGlyphiconName = "glyphicon glyphicon-chevron-down";
+                        }
+                        if (Model.CurrentSort.Equals("city_desc"))
+                        {
+                            orderType = "city";
+                            classGlyphiconName = "glyphicon glyphicon-chevron-up";
+                        }
+                    }
+                    else
+                    {
+                        orderType = "name";
+                        classGlyphiconName = "glyphicon glyphicon-chevron-down";
+                    }
+                }
+                <a style="color: inherit;" asp-page="./SearchEmployeesList" asp-route-sortOrder="@Model.NameSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Employee[0].FullName)
+                    @if (orderType == "name")
+                    {
+                        <i class="@classGlyphiconName"></i>
+                    }
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee[0].Salon)
+            </th>
+            <th>
+                <a style="color: inherit;" asp-page="./SearchEmployeesList" asp-route-sortOrder="@Model.CitySort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Employee[0].Salon.City.Name)
+                    @if (orderType == "city")
+                    {
+                        <i class="@classGlyphiconName"></i>
+                    }
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Employee)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobTitle.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salon.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salon.City.Name)
+                </td>
+                <td>
+                    <a asp-page="/SalonPage/Index" asp-route-id="@item.SalonId">Salono puslapis</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Employee.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Employee.HasNextPage ? "disabled" : "";
+}
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-page="./SearchEmployeesList"
+               asp-route-sortOrder="@Model.CurrentSort"
+               asp-route-pageIndex="@(Model.Employee.PageIndex - 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Praeitas
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-page="./SearchEmployeesList"
+               asp-route-sortOrder="@Model.CurrentSort"
+               asp-route-pageIndex="@(Model.Employee.PageIndex + 1)"
+               asp-route-currentFilter="@Model.CurrentFilter"
+               class="page-link">
+                Kitas
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+<a href='javascript:history.go(-1)'>Grįžti atgal</a>
+
+@section scripts
+{
+    <script type="text/javascript">
+    </script>
+}

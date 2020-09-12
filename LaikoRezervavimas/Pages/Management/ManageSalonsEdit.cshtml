@@ -1,0 +1,109 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ManageSalonsEditModel
+
+@{
+    ViewData["Title"] = "Redaguoti";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<h4>@Model.Salon.FullName</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Salon.Id" />
+            <input type="hidden" asp-for="Salon.CompanyId" class="form-control" />
+            <input type="hidden" asp-for="Salon.CityId" class="form-control" />
+            <input type="hidden" asp-for="Salon.Address" class="form-control" />
+            <input type="hidden" asp-for="Salon.Name" class="form-control" />
+            <input type="hidden" asp-for="Salon.Latitude" class="form-control" />
+            <input type="hidden" asp-for="Salon.Longitude" class="form-control" />
+            <input type="hidden" asp-for="Salon.Longitude" class="form-control" />
+            <div class="form-group">
+                <label asp-for="Salon.Description" class="control-label"></label>
+                <textarea rows="4" asp-for="Salon.Description" class="form-control"></textarea>
+                <span asp-validation-for="Salon.Description" class="text-danger"></span>
+            </div>
+            @{ var i = 0;
+                foreach (var day in Model.Salon.SalonSchedule)
+                {
+                    var startTimeDayId = "startTime" + day.Day.Value.ToString();
+                    var endTimeDayId = "endTime" + day.Day.Value.ToString();
+                    <input type="hidden" asp-for="@Model.Salon.SalonSchedule[i].Id" />
+                    <input type="hidden" asp-for="@Model.Salon.SalonSchedule[i].SalonId" />
+                    <input type="hidden" asp-for="@Model.Salon.SalonSchedule[i].Day" />
+                    <label class="control-label" style="padding-bottom: 0px;">@Tools.DayToWord.LithuanianDayWord(day.Day.Value)</label>
+                    <div class="row" style="padding-bottom: 5px;">
+                        <div class="col-4 my-auto form-group">
+                            <div class="input-group" id="@startTimeDayId" data-target-input="nearest">
+                                <input asp-for="@Model.Salon.SalonSchedule[i].StartTime" class="form-control datetimepicker-input" data-target="#@startTimeDayId" autocomplete="off">
+                                <div class="input-group-append" data-target="#@startTimeDayId" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="glyphicon glyphicon-time"></i></div>
+                                </div>
+                                <span asp-validation-for="@Model.Salon.SalonSchedule[i].StartTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-1 my-auto text-center font-weight-bold">
+                            <text>-</text>
+                        </div>
+                        <div class="col-4 my-auto form-group">
+                            <div class="input-group" id="@endTimeDayId" data-target-input="nearest">
+                                <input asp-for="@Model.Salon.SalonSchedule[i].EndTime" class="form-control datetimepicker-input" data-target="#@endTimeDayId" autocomplete="off">
+                                <div class="input-group-append" data-target="#@endTimeDayId" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="glyphicon glyphicon-time"></i></div>
+                                </div>
+                                <span asp-validation-for="@Model.Salon.SalonSchedule[i].EndTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-auto form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" asp-for="@Model.Salon.SalonSchedule[i].IsWorking">
+                                <label class="custom-control-label" asp-for="@Model.Salon.SalonSchedule[i].IsWorking"></label>
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+            }
+            <div class="form-group">
+                <input type="submit" value="Išsaugoti" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./ManageSalons">Grįžti</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+    <script type="text/javascript">
+        $(function () {
+            $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+                icons: {
+                    time: 'glyphicon glyphicon-time',
+                    date: 'glyphicon glyphicon-calendar',
+                    up: 'glyphicon glyphicon-arrow-up',
+                    down: 'glyphicon glyphicon-arrow-down',
+                    previous: 'fglyphicon glyphicon-chevron-left',
+                    next: 'glyphicon glyphicon-chevron-right',
+                    today: 'glyphicon glyphicon-calendar-check-o',
+                    clear: 'glyphicon glyphicon-trash',
+                    close: 'glyphicon glyphicon-times'
+                },
+                format: 'HH:mm',
+                stepping: '15',
+                allowInputToggle: true
+            });
+        });
+    </script>
+}

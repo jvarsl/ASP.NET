@@ -1,0 +1,73 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ManageEmployeesModel
+@{
+    ViewData["Title"] = "Tvarkyti darbuotojus";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+@{
+    if (Model.Employee.Count == 0)
+    {
+        <div class="bs-callout bs-callout-info">
+            <text>Nerasta jokių darbuotojų, priklausančių Jūsų salonui(-ams).</text>
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee[0].FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayName("Prisijungimo vardas")
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee[0].JobTitle)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee[0].Salon)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee[0].Salon.City)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Employee)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @if (item.JobTitle != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.JobTitle.Name)
+                            }
+                            else
+                            { <text>nepasirinkta</text>}
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Salon.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Salon.City.Name)
+                        </td>
+                        <td>
+                            <a asp-page="./ManageEmployeesEdit" asp-route-id="@item.Id">Redaguoti</a> |
+                            <a asp-page="./ManageEmployeesRemove" asp-route-id="@item.Id">Pašalinti</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

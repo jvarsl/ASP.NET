@@ -1,0 +1,91 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.ManageSalonsDetailsModel
+
+@{
+    ViewData["Title"] = "Detaliau";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>@Model.Salon.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Salon.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Salon.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Salon.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Salon.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Salon.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Salon.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Salon.Company)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Salon.Company.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Salon.City)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Salon.City.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayName("Darbo laikas")
+        </dt>
+        <dd class="col-sm-10">
+            <table class="text-center">
+                <tbody>
+                    @{
+                        var currentDay = (byte)DateTime.Now.DayOfWeek;
+                        foreach (var times in Model.Salon.SalonSchedule)
+                        {
+                            var day = "";
+                            var startTime = times.StartTime.ToString().Substring(0, 5);
+                            var endTime = times.EndTime.ToString().Substring(0, 5);
+                            var color = startTime != endTime ? "#449D44" : "#D9534F";
+                            switch (times.Day)
+                            {
+                                case 1: day = "Pirmadienis"; break;
+                                case 2: day = "Antradienis"; break;
+                                case 3: day = "Trečiadienis"; break;
+                                case 4: day = "Ketvirtadienis"; break;
+                                case 5: day = "Penktadienis"; break;
+                                case 6: day = "Šeštadienis"; break;
+                                case 7: day = "Sekmadienis"; break;
+                            }
+                            <tr>
+
+                                <td class="tdBorderCircled dot" style="background-color: @color; color: @color;"></td>
+                                <td style="width: 50%">
+                                    @day
+                                </td>
+                                <td style="width: 12.5%">@Html.DisplayFor(r => startTime)</td>
+                                <td style="width: 8.33%">-</td>
+                                <td style="width: 12.5%">@Html.DisplayFor(r => endTime)</td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+
+
+<div>
+    <a asp-page="./ManageSalonsEdit" asp-route-id="@Model.Salon.Id">Redaguoti</a> |
+    <a asp-page="./ManageSalons">Grįžti</a>
+</div>

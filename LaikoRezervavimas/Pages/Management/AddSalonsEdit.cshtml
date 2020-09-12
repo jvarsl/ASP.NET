@@ -1,0 +1,64 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AddSalonsEditModel
+@{
+    ViewData["Title"] = "Redaguoti saloną";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>@Model.Salon.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Salon.Id" />
+            <div class="form-group">
+                <label asp-for="Salon.Company" class="control-label"></label>
+                <select asp-for="Salon.CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                <span asp-validation-for="Salon.CompanyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salon.City" class="control-label"></label>
+                <select asp-for="Salon.CityId" class="form-control" asp-items="ViewBag.CityId"></select>
+                <span asp-validation-for="Salon.CityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salon.Address" class="control-label"></label>
+                <input asp-for="Salon.Address" class="form-control" />
+                <span asp-validation-for="Salon.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salon.Name" class="control-label"></label>
+                <input asp-for="Salon.Name" class="form-control" />
+                <span asp-validation-for="Salon.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salon.Latitude" class="control-label"></label>
+                <input asp-for="Salon.Latitude" class="form-control" />
+                <span asp-validation-for="Salon.Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salon.Longitude" class="control-label"></label>
+                <input asp-for="Salon.Longitude" class="form-control" />
+                <span asp-validation-for="Salon.Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salon.Description" class="control-label"></label>
+                <textarea asp-for="Salon.Description" class="form-control"></textarea>
+                <span asp-validation-for="Salon.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Išsaugoti" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./AddSalons">Grįžti</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

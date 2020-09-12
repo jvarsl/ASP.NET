@@ -1,0 +1,70 @@
+﻿@page
+@model SalonWithRazor.Pages.Management.AssignStaffToSalonsEditModel
+@{
+    ViewData["Title"] = "Pridėti vartotoją prie salono personalo";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSalons[0].UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSalons[0].UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSalons[0].SalonId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSalons[0].SalonName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSalons[0].City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffSalons[0].IsSelected)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.StaffSalons)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalonId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalonName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsSelected)
+            </td>
+            <td>
+                @{
+                    var buttonText = item.IsSelected ? "Nuimti" : "Pridėti";
+                    var buttonClass = item.IsSelected ? "btn-danger" : "btn-success";
+                }
+                <form asp-page="./AssignStaffToSalonsEdit" asp-route-userId="@item.UserId" asp-route-salonId="@item.SalonId" asp-route-isSelected="@item.IsSelected" method="post">
+                    <button class="btn btn-sm @buttonClass">@buttonText</button>
+                </form>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-page="./AssignStaffToSalons">Grįžti</a>

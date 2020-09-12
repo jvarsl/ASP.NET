@@ -1,0 +1,23 @@
+﻿@using SalonWithRazor.Models
+@{
+}
+
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item"><a class="nav-link @ManageManagementPages.IndexNavClass(ViewContext)" id="index" asp-page="./Index">Pagrindinis</a></li>
+        @{ if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Admin_AssignStaffEmployeesNavClass(ViewContext)" id="assignStaff" asp-page="./AssignStaffEmployees">Priskirti rolę</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Admin_AssignStaffToSalonsNavClass(ViewContext)" id="assignStaffToSalons" asp-page="./AssignStaffToSalons">Priskirti saloną</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Admin_AddCompaniesNavClass(ViewContext)" id="companies" asp-page="./AddCompanies">Pridėti įmonę</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Admin_AddSalonsNavClass(ViewContext)" id="salons" asp-page="./AddSalons">Tvarkyti saloną</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Admin_AddJobTitlesNavClass(ViewContext)" id="jobTitles" asp-page="./AddJobTitles">Pridėti profesiją</a></li>
+            }
+            if (User.IsInRole("Staff"))
+            {
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Staff_ConfirmEmployeeAppealsNavClass(ViewContext)" id="appeals" asp-page="./ConfirmEmployeeAppeals">Tvirtinti prašymus</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Staff_AddServicesNavClass(ViewContext)" id="services" asp-page="./AddServices">Tvarkyti paslaugas</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Staff_ManageSalonsNavClass(ViewContext)" id="manageSalons" asp-page="./ManageSalons">Tvarkyti salonus</a></li>
+                <li class="nav-item"><a class="nav-link @ManageManagementPages.Staff_ManageEmployeesNavClass(ViewContext)" id="manageEmployees" asp-page="./ManageEmployees">Tvarkyti darbuotojus</a></li>
+            }
+        }
+    </ul>

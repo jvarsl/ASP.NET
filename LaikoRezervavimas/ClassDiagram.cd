@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="SalonWithRazor.Models.Client" Collapsed="true">
+    <Position X="4" Y="5.25" Width="1.5" />
+    <InheritanceLine Type="SalonWithRazor.Models.AppUser" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.438" Y="4.108" />
+        <Point X="7.438" Y="4.237" />
+        <Point X="7.373" Y="4.237" />
+        <Point X="7.373" Y="4.5" />
+        <Point X="4.75" Y="4.5" />
+        <Point X="4.75" Y="5.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.AppUser">
+    <Position X="7" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAICAUABAEAAAAAACQAAAAAAAAAAABAg=</HashCode>
+      <FileName>Models\AppUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.Employee">
+    <Position X="5.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAQAAAEAgAAAAAAAAAAAAQAIgAAAAAAAAACAAAIAAA=</HashCode>
+      <FileName>Models\Employee.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="JobTitle" />
+      <Property Name="Salon" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="EmployeeSchedule" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.City">
+    <Position X="13.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\City.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.AppRole">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\AppRole.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.EmployeeSchedule">
+    <Position X="7.25" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AABCAAAAIAAAAAAAAAAAAAAAKAAgAAAAAAAAAAACABI=</HashCode>
+      <FileName>Models\EmployeeSchedule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.JobTitle">
+    <Position X="8" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAEQACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\JobTitle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.Reservation">
+    <Position X="11" Y="7.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAICCAAEACAAAAAAgAAIAAAACgAAAAAAAgAAAIACAAQ=</HashCode>
+      <FileName>Models\Reservation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Client" />
+      <Property Name="Employee" />
+      <Property Name="Status" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ReservationComment" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.ReservationStatus">
+    <Position X="12.5" Y="14.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ReservationStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.ReservationComment">
+    <Position X="10" Y="14.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAABAAAAEAAEAAIAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ReservationComment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.Salon">
+    <Position X="10.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAABAkIgAIAIQAAIAAQACAAAQAACAEAABAAAAAA=</HashCode>
+      <FileName>Models\Salon.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Company" />
+      <Property Name="City" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="SalonSchedule" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.SalonSchedule">
+    <Position X="4" Y="11.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAIAAAAAAAAAAAAAAAIAAgAAAAAAACAAAAABA=</HashCode>
+      <FileName>Models\SalonSchedule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.Service">
+    <Position X="7" Y="11.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAgAICAAAAAAEQAIAAAAgKgAQACAIAAEgA=</HashCode>
+      <FileName>Models\Service.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ServiceCategory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.ServiceCategory">
+    <Position X="12.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ServiceCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SalonWithRazor.Models.ServiceJobTitle">
+    <Position X="10.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAAAAAAAAAAAAAAgAAQAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Models\ServiceJobTitle.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="JobTitle" />
+      <Property Name="Service" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.ServiceReservation">
+    <Position X="3.25" Y="13.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAABAAAAEAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ServiceReservation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Reservation" />
+      <Property Name="Service" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.StaffSalon">
+    <Position X="12.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAICAAAAACAAACAAAAAAA=</HashCode>
+      <FileName>Models\StaffSalon.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Staff" />
+      <Property Name="Salon" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.AppUserRole" Collapsed="true">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <AssociationLine Name="Role" Type="SalonWithRazor.Models.AppRole" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5" Y="1.803" />
+        <Point X="4.625" Y="1.803" />
+        <Point X="4.625" Y="1.213" />
+        <Point X="4.25" Y="1.213" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\AppUserRole.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+      <Property Name="Role" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.Notification">
+    <Position X="3" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAAAAAAEEAIAAAAAAAAAAwAAQAAAAAA=</HashCode>
+      <FileName>Models\Notification.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AppUser" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SalonWithRazor.Models.Company">
+    <Position X="13.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

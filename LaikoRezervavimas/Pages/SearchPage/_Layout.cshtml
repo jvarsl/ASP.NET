@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
+    <h1>Paieška</h1>
+
+<div>
+    <h4>Pasirink skiltį ir ieškok</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-2">
+            <partial name="_ManageSearch" />
+        </div>
+        <div class="col-md-10">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

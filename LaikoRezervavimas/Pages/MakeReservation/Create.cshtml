@@ -1,0 +1,470 @@
+﻿@page
+@model SalonWithRazor.CreateModel
+@{
+    ViewData["Title"] = "Sukurti";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Rezervacija</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" asp-page-handler="reservation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="bs-callout bs-callout-info" style="margin-bottom: 1px; height: 80%; line-height: 75%; padding:0px 0px;">
+                <h5 data-toggle="collapse">&nbsp;Filtrai</h5>
+                <div class="form-group container container-fluid">
+                    <label asp-for="CityId" class="control-label small"></label>
+                    <select style="background-color: #fcfcfc;" asp-for="CityId" asp-items="ViewBag.Cities" class="form-control custom-select custom-select-sm" placeholder="Pasirinkite miestą..." data-val="false">
+                        <option value="">Pasirinkite miestą...</option>
+                    </select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+                </div>
+                <div class="form-group container container-fluid">
+                    <label asp-for="SalonId" class="control-label small"></label>
+                    <select style="background-color: #fcfcfc;" asp-for="SalonId" asp-items="ViewBag.Salons" class="form-control custom-select custom-select-sm" data-val="false">
+                        <option value="">Pasirinkite saloną...</option>
+                    </select>
+                    <span asp-validation-for="SalonId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.EmployeeId" class="control-label"></label>
+                <select id="employeeId" asp-for="Reservation.EmployeeId" class="form-control custom-select" placeholder="Pasirinkite darbuotoją..." asp-items="ViewBag.EmployeeId">
+                    <option value="">Pasirinkite darbuotoją...</option>
+                </select>
+                <span asp-validation-for="Reservation.EmployeeId" class="text-danger"></span>
+            </div>
+
+            <label asp-for="ServiceReservation.ServiceId" class="control-label"></label>
+            <div class="form-group form-inline">
+                <div class="form-group flex-fill mr-2">
+
+                    <select id="service1" asp-for="ServiceId1" class="form-control flex-fill mr-2 custom-select" placeholder="Pasirinkite paslaugą..." asp-items="ViewBag.ServiceName" onchange="callAjaxTimes();">
+                        <option value="">Pasirinkite paslaugą...</option>
+                    </select>
+                    <span asp-validation-for="ServiceId1" class="text-danger"></span>
+                </div>
+                <span id="toogleIcon1" class="glyphicon glyphicon-plus btn btn-primary btn-sm"></span>
+            </div>
+
+
+            <div id="service2ToHide" style="        display: none;
+">
+                <label asp-for="ServiceReservation2.ServiceId" class="control-label"></label><label>&nbsp;(antra)</label>
+                <div class="form-group form-inline" id="toogleService2">
+                    <div class="form-group flex-fill mr-2">
+                        <select id="service2" asp-for="ServiceId2" class="form-control flex-fill mr-2 custom-select" placeholder="Pasirinkite paslaugą..." asp-items="ViewBag.ServiceName2" data-val="false" onchange="callAjaxTimes();">
+                            <option value="">Pasirinkite paslaugą...</option>
+                        </select>
+                        <span asp-validation-for="ServiceReservation2.ServiceId" class="text-danger"></span>
+                    </div>
+                    <span id="toogleIcon2" class="glyphicon glyphicon-plus btn btn-primary btn-sm"></span>
+                </div>
+            </div>
+
+            <div id="service3ToHide" style="display: none;">
+                <label asp-for="ServiceReservation3.ServiceId" class="control-label"></label><label>&nbsp;(trečia)</label>
+                <div class="form-group form-inline" id="toogleService3">
+                    <div class="form-group flex-fill mr-2">
+                        <select id="service3" asp-for="ServiceId3" class="form-control flex-fill mr-2 custom-select" placeholder="Pasirinkite paslaugą..." asp-items="ViewBag.ServiceName3" data-val="false" onchange="callAjaxTimes();">
+                            <option value="">Pasirinkite paslaugą...</option>
+                        </select>
+                        <span asp-validation-for="ServiceReservation3.ServiceId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" id="datepickerDay" type="text" pattern="\d{4}-\d{1,2}-\d{1,2}" class="form-control" data-provide="datepicker" autocomplete="off"
+                       placeholder="yyyy-MM-dd" onChange="callAjaxTimes();">
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input id="startTime" asp-for="StartTime" class="form-control hidden" placeholder="HH:mm" readonly="readonly">
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+
+            @Html.AntiForgeryToken()
+            <div>
+                <img class="hidden" id="ajaxLoader" src="~/lib/ajax-loader.gif" />
+                <h2 class="hidden" id="textNoAvailableTime" style="color:brown;">Laisvų valandų nerasta</h2>
+                <table id="tableWithHiddenHeader" class="table-borderless table-sm fit-inside-div text-center">
+                    <thead>
+                        <tr>
+                            <th> Id </th>
+                            <th> Hour00 </th>
+                            <th> Hour01 </th>
+                            <th> Hour02 </th>
+                            <th> Hour03 </th>
+                            <th> Hour04 </th>
+                            <th> Hour05 </th>
+                            <th> Hour06 </th>
+                            <th> Hour07 </th>
+                            <th> Hour08 </th>
+                            <th> Hour09 </th>
+                            <th> Hour10 </th>
+                            <th> Hour11 </th>
+                            <th> Hour12 </th>
+                            <th> Hour13 </th>
+                            <th> Hour14 </th>
+                            <th> Hour15 </th>
+                            <th> Hour16 </th>
+                            <th> Hour17 </th>
+                            <th> Hour18 </th>
+                            <th> Hour19 </th>
+                            <th> Hour20 </th>
+                            <th> Hour21 </th>
+                            <th> Hour22 </th>
+                            <th> Hour23 </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
+
+
+            <div class="form-group">
+
+                <label asp-for="ReservationComment.Comment" class="control-label"> </label>
+                <textarea asp-for="ReservationComment.Comment" class="form-control" placeholder="Neprivalomas komentaras" rows="3"></textarea>
+                <span asp-validation-for="ReservationComment.Comment" class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group">
+                <input type="button" value="Rezervuoti" class="btn btn-primary" data-toggle="modal" data-target="#cofirmationModal" />
+            </div>
+
+            <div class="modal fade" id="cofirmationModal" tabindex="-1" role="dialog" aria-labelledby="cofirmationModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cofirmationModalLabel">Patvirtinimas</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Sukurti rezervaciją pas <b id="confirmationModelEmployee"></b> <br> laiku <b id="confirmationModelTime"></b> ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" onclick="">Sukurti</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Ne</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-page="Index">Grįžti į sąrašą</a>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function () {
+            $('#toogleIcon1').on('click', function () {
+                if ($('#toogleIcon1').hasClass('glyphicon-plus')) {
+                    $('#toogleIcon1').removeClass('glyphicon-plus');
+                    $('#toogleIcon1').addClass('glyphicon-minus');
+                    $('#service2ToHide').slideDown();
+                } else {
+                    $('#toogleIcon1').removeClass('glyphicon-minus');
+                    $('#toogleIcon1').addClass('glyphicon-plus');
+                    $('#service2ToHide').slideUp();
+                    $('#service3ToHide').slideUp();
+                    document.getElementById('service2').value = '';
+                    document.getElementById('service3').value = '';
+                    $('#toogleIcon2').removeClass('glyphicon-minus');
+                    $('#toogleIcon2').addClass('glyphicon-plus');
+                }
+                callAjaxTimes();
+            }),
+                $('#toogleIcon2').on('click', function () {
+                    if ($('#toogleIcon2').hasClass('glyphicon-plus')) {
+                        $('#toogleIcon2').removeClass('glyphicon-plus');
+                        $('#toogleIcon2').addClass('glyphicon-minus');
+                        $('#service3ToHide').slideDown();
+                    } else {
+                        $('#toogleIcon2').removeClass('glyphicon-minus');
+                        $('#toogleIcon2').addClass('glyphicon-plus');
+                        $('#service3ToHide').slideUp();
+                        document.getElementById('service3').value = '';
+                    }
+                    callAjaxTimes();
+
+                })
+        });
+
+        $(function () {
+            $('#cofirmationModal').on('show.bs.modal', function (event) {
+                var employee = $("#employeeId option:selected").text();
+                var date = document.getElementById('datepickerDay').value;
+                var time = document.getElementById('startTime').value;
+                $('#confirmationModelEmployee').text(employee);
+                $('#confirmationModelTime').text(date + ' ' + time);
+            })
+        });
+    </script>
+    <script>
+        $(function () {
+            $("#CityId").on("change", function () {
+                var cityId = $(this).val();
+                $("#SalonId").empty();
+                $('#employeeId').val('');
+                $("#service1 option:not([value=''])").remove();
+                $("#service2 option:not([value=''])").remove();
+                $("#service3 option:not([value=''])").remove();
+                $("#SalonId").append("<option value=''>Pasirinkite saloną...</option>");
+                $.getJSON(`?handler=Salons&cityId=${cityId}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#SalonId").append(`<option value="${item.id}">${item.fullName}</option>`);
+                    });
+                });
+                callAjaxTimes();
+            });
+        });
+
+        $(function () {
+            $("#SalonId").on("change", function () {
+                var salonId = $(this).val();
+                $("#employeeId").empty();
+                $("#service1 option:not([value=''])").remove();
+                $("#service2 option:not([value=''])").remove();
+                $("#service3 option:not([value=''])").remove();
+                $("#employeeId").append("<option value=''>Pasirinkite darbuotoją...</option>");
+                $.getJSON(`?handler=Employees&salonId=${salonId}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#employeeId").append(`<option value="${item.id}">${item.fullName}</option>`);
+                    });
+                });
+                callAjaxTimes();
+            });
+        });
+
+        $(function () {
+            $("#employeeId").on("change", function () {
+                var employeeId = $(this).val();
+                $("#service1").empty();
+                $("#service2 option:not([value=''])").remove();
+                $("#service3 option:not([value=''])").remove();
+                $("#service1").append("<option value=''>Pasirinkite paslaugą...</option>");
+                $.getJSON(`?handler=Services&employeeId=${employeeId}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#service1").append(`<option value="${item.id}">${item.fullName}</option>`);
+                    });
+                });
+                callAjaxTimes();
+            });
+        });
+
+        $(function () {
+            $("#service1").on("change", function () {
+                var employeeId = $('#employeeId').val();
+                var service1 = $('#service1').val();
+                $("#service2").empty();
+                $("#service3 option:not([value=''])").remove();
+                $("#service2").append("<option value=''>Pasirinkite paslaugą...</option>");
+                $.getJSON(`?handler=Services2&employeeId=${employeeId}&serviceId1=${service1}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#service2").append(`<option value="${item.id}">${item.fullName}</option>`);
+                    });
+                });
+                callAjaxTimes();
+            });
+        });
+
+        $(function () {
+            $("#service2").on("change", function () {
+                var employeeId = $('#employeeId').val();
+                var service1 = $('#service1').val();
+                var service2 = $('#service2').val();
+                $("#service3").empty();
+                $("#service3").append("<option value=''>Pasirinkite paslaugą...</option>");
+                $.getJSON(`?handler=Services3&employeeId=${employeeId}&serviceId1=${service1}&serviceId2=${service2}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#service3").append(`<option value="${item.id}">${item.fullName}</option>`);
+                    });
+                });
+                callAjaxTimes();
+            });
+        });
+    </script>
+
+    @* adds search to select button
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function () {
+                $('select').selectize({
+                    sortField: 'text'
+                });
+            });
+        </script>
+    *@
+    <script type="text/javascript" language="JavaScript">
+
+        document.addEventListener("DOMContentLoaded", function () {
+            //on get parameters are in url, this removes it
+            var newURL = location.href.split("?")[0];
+            window.history.replaceState('object', document.title, newURL);
+
+            //if passed DateTime object from parameters trim the time out
+            var datepickerDayValue = $('#datepickerDay').val();
+            $('#datepickerDay').val(datepickerDayValue.substring(0, 10));
+            callAjaxTimes();
+        });
+
+        function callAjaxTimes() {
+            var service1 = document.getElementById('service1').value;
+            var date = document.getElementById('datepickerDay').value;
+            var employeeId = document.getElementById('employeeId').value;
+
+            var service2 = document.getElementById('service2').value;
+            var service3 = document.getElementById('service3').value;
+            if (service1 && date && employeeId) {
+                $(document).ready(AjaxTimes());
+            } else {
+                $("tr.tableWithHiddenHeaderBody").remove();
+                $("#textNoAvailableTime").addClass('hidden');
+            }
+        }
+
+        $(document).on({ //loading gif
+            ajaxStart: function () {
+                $("#ajaxLoader").removeClass('hidden');
+                $("#textNoAvailableTime").addClass('hidden');
+                $("#startTime").val("");
+            },
+            ajaxStop: function () { $("#ajaxLoader").addClass('hidden'); }
+        });
+        function AjaxTimes() {
+            var service1 = document.getElementById('service1').value;
+            var date = document.getElementById('datepickerDay').value;
+            var employeeId = document.getElementById('employeeId').value;
+
+            var service2 = document.getElementById('service2').value;
+            var service3 = document.getElementById('service3').value;
+            $.ajax({
+                type: "POST",
+                url: "/MakeReservation/Create?handler=Send",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: JSON.stringify({
+                    Service1: service1,
+                    Date: date,
+                    EmployeeId: employeeId,
+                    Service2: service2,
+                    Service3: service3,
+                }),
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $("tr.tableWithHiddenHeaderBody").remove();
+                    $.each(response, function (key, val) {
+                        var tr = $('<tr class="tableWithHiddenHeaderBody"></tr>');
+                        $.each(val, function (k, v) {
+                            if (v != null) {
+                                $('<td>' + '<button type="button" class="btn btn-outline-success" style="width:100%; padding: .375rem .0rem;" onclick="this.blur();">' + v + '</td>').appendTo(tr);
+                            } else { $('<td>' + '</td>').appendTo(tr); }
+                        });
+                        tr.appendTo('#tableWithHiddenHeader');
+                    });
+                    hideEmptyRows();
+                    $("#tableWithHiddenHeader td:first-child").hide();
+                    $("#tableWithHiddenHeader th:first-child").hide();
+                    highlightClickedCellOnTable();
+                },
+                error: function (response) {
+                    $("tr.tableWithHiddenHeaderBody").remove();
+                    $("#textNoAvailableTime").removeClass('hidden');
+                },
+                timeout: 5000
+            });
+        }
+
+    </script>
+
+    <style>
+
+        .fit-inside-div {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+
+        .hidden {
+            display: none;
+        }
+
+        #tableWithHiddenHeader thead {
+            visibility: collapse;
+        }
+
+
+        .btn:active:focus {
+            outline: none;
+        }
+
+        td {
+            background-clip: padding-box;
+            border-radius: 5px;
+            border: 5px solid white;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        function hideEmptyRows() {
+            $('table').each(function (a, tbl) { //remove empty columns
+                var currentTableRows = $(this).find("tr").length - 1;
+                var rowCount = $(this).find('tr:last').index() + 1;
+                $(tbl).find('th').each(function (i) {
+                    var removeVal = 0;
+                    var currentTable = $(this).parents('table');
+
+                    var tds = currentTable.find('tr td:nth-child(' + (i + 1) + ')');
+                    tds.each(function (j) { if ($(this).text().trim() == '') removeVal++; });
+
+                    if (removeVal == currentTableRows && rowCount > 1) {
+                        $(this).hide();
+                        tds.hide();
+                    }
+                });
+            });
+        };
+        function highlightClickedCellOnTable() {
+            $(document).ready(function () { //highlight clicked cell
+                $('table').find('td').click(function () {
+                    if ($(this).text().length > 3) {
+                        $('td').css('background-color', '');
+                        $(this).css('background-color', '#84e084');
+                        $("#startTime").val($(this).text());
+                    }
+                });
+            });
+        }
+
+
+
+    </script>
+}
+

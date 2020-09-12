@@ -1,0 +1,49 @@
+﻿@using SalonWithRazor.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@{ var user = await UserManager.GetUserAsync(User); }
+
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Sveiki, @user.FullName!</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark icon-badge-container" asp-area="" asp-page="/Notiflication/Index" title="Pranešimai">
+                <div class="icon-badge-container">
+                    <i class="glyphicon glyphicon-bullhorn icon-badge-icon"></i>
+                        @{await Html.RenderPartialAsync("_NotiflicationCountPartial");}
+                </div>
+            </a>
+        </li>
+        @*
+
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Notiflication/Index" title="Pranešimai">
+                    <p class="glyphicon glyphicon-bullhorn badge badge-danger">
+                        <sup class="text-sm-left">
+                            @{await Html.RenderPartialAsync("_NotiflicationCountPartial");}
+                        </sup>
+                    </p>
+                </a>
+            </li>
+        *@
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="nav-link btn btn-link text-dark">Atsijungti</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Registruotis</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Prisijungti</a>
+        </li>
+    }
+</ul>
