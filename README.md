@@ -1,8 +1,12 @@
 Sistemos aprašymas [https://j-varslauskas.gitbook.io/laiko-rezervavimas-asp-net-5/](https://j-varslauskas.gitbook.io/laiko-rezervavimas-asp-net-5/)
+
 Vaizdo įrašas [https://www.youtube.com/watch?v=ci3ygyEAB9U](https://www.youtube.com/watch?v=ci3ygyEAB9U)
 
+
 Programuota su C# 8.0, CSS Bootstrap 4, HTML, JavaScript - jQuery v3.3.1, Ajax, Moment.js ir panašiomis bibliotekomis.
+
 SQL Server 2019 naudota T-SQL.
+
 Papildomai naudota: EF Core 5.0 (ORM), ASP.NET Core Identity, Json.NET, Fluent API, Maps JavaScript API.
 
 
